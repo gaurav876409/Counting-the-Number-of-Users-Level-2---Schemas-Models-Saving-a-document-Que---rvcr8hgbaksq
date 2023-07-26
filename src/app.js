@@ -21,13 +21,18 @@ app.use(express.json());
 
 app.get("/",async function(req,res){
 
-    var count = 0;
+    // var count = 0;
 
     //Write you code here
     //update count variable
+    const queryName = req.query.name;
+    try {
+        const regexName = new RegExp(`^${queryName}`, 'i');
+        const count = await users.countDocuments({ name: { $regex: regexName } });
 
-    res.send(JSON.stringify(count));
-
+        res.send(JSON.stringify(count));
+    } catch (error) {
+        res.status(500).send("Error fetching data from the database");
+    }
 });
-
 module.exports = app;
